@@ -1,28 +1,27 @@
 from brownie import FundMe, MockV3Aggregator, network, config
-from scripts.utils import get_account
-from web3 import Web3
+from scripts.utils import get_account, deploy_mocks
 
 
 def deploy_fund_me():
     account = get_account()
     # pass price feed address to fundme contract
     if network.show_active() != "development":
+        # set contract address to value stored in config
         price_feed_address = config["networks"][network.show_active][
             "eth_usd_price_feed"
         ]
     else:
-        print(f"The active network is {network.show_active()}")
-        print("Deploying mocks")
-        mock_aggregator = MockV3Aggregator.deploy(
-            18, Web3.toWei(4000, "ether"), {"from": account}
-        )
-        price_feed_address = mock_aggregator.address
+        deploy_mocks()
+        # set price feed address to address of deployed mock contract
+        price_feed_address = MockV3Aggregator[-1].address
         print("Mocks deployed")
 
     fund_me = FundMe.deploy(
         price_feed_address,
         {"from": account},
-        publish_source=config["networks"][network.show_active()].get("verify"),
+        publish_source=config["networks"][network.show_active()].get(
+            "verify"
+        ),  # verify code if its a live network
     )
     print(f"Contract deployed to {fund_me.address}")
 
