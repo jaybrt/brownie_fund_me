@@ -15,11 +15,16 @@ contract FundMe {
         priceFeed = AggregatorV3Interface(_priceFeed);
     }
 
+    function getEnteranceFee() public view returns (uint256) {
+        uint256 minUSD = 50 * 10**18;
+        uint256 price = getPrice();
+        return (minUSD * 10**18) / price;
+    }
+
     function fund() public payable {
         //$50 threshold
-        uint256 minUSD = 50 * 10**18;
         require(
-            getConversion(msg.value) >= minUSD,
+            msg.value >= getEnteranceFee(),
             "ETH threshold for funding not met"
         );
         addressToAmountFunded[msg.sender] += msg.value;
