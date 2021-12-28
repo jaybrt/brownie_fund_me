@@ -38,7 +38,7 @@ contract FundMe {
 
     function getPrice() public view returns (uint256) {
         (, int256 answer, , , ) = priceFeed.latestRoundData();
-        return uint256(answer);
+        return uint256(answer * 10**10);
     }
 
     function getConversion(uint256 ethAmt) public view returns (uint256) {

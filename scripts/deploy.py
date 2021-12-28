@@ -7,7 +7,7 @@ def deploy_fund_me():
     # pass price feed address to fundme contract
     if network.show_active() not in LOCAL_BLOCKCHAIN_ENVIRONMENTS:
         # set contract address to value stored in config
-        price_feed_address = config["networks"][network.show_active][
+        price_feed_address = config["networks"][network.show_active()][
             "eth_usd_price_feed"
         ]
     else:
@@ -24,6 +24,7 @@ def deploy_fund_me():
         ),  # verify code if its a live network
     )
     print(f"Contract deployed to {fund_me.address}")
+    return fund_me
 
 
 def main():
