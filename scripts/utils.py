@@ -4,8 +4,8 @@ from web3 import Web3
 FORKED_LOCAL_ENVIRONMENTS = ["mainnet-fork-dev"]
 LOCAL_BLOCKCHAIN_ENVIRONMENTS = ["development", "ganache-local"]
 
-DECIMALS = 18
-STARTING_PRICE = 4000
+DECIMALS = 8
+STARTING_PRICE = 4000 * 10 ** 8
 
 
 def get_account():
@@ -26,6 +26,4 @@ def deploy_mocks():
     if (
         len(MockV3Aggregator) <= 0
     ):  # only deploy new mock if one hasn't been deployed before
-        MockV3Aggregator.deploy(
-            DECIMALS, Web3.toWei(STARTING_PRICE, "ether"), {"from": get_account()}
-        )
+        MockV3Aggregator.deploy(DECIMALS, STARTING_PRICE, {"from": get_account()})
